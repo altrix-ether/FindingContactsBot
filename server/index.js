@@ -12,7 +12,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: join(__dirname, ".env") });
 
 const app = express();
-const PORT = process.env.PORT ?? 3001;
+const PORT = Number(process.env.PORT) || 3001;
 const token = process.env.GITHUB_TOKEN;
 
 app.use(cors());
@@ -169,8 +169,9 @@ if (existsSync(clientDist)) {
   });
 }
 
-const server = app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Listening on http://0.0.0.0:${PORT}`);
+// "::" is dual-stack. Railway's proxy connects over IPv6; 0.0.0.0 is IPv4 only and returns 502.
+const server = app.listen(PORT, "::", () => {
+  console.log(`Listening on [::]:${PORT}`);
   console.log(
     existsSync(clientDist)
       ? `Serving UI from ${clientDist}`

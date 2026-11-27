@@ -58,7 +58,7 @@ npm run build
 npm start
 ```
 
-Express serves `client/dist` and the API on the same origin. It listens on `0.0.0.0` and `PORT` (default `3001`).
+Express serves `client/dist` and the API on the same origin. It listens on `::` (IPv4 and IPv6) and `PORT` (default `3001`).
 
 ## Railway
 
