@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import cors from "cors";
@@ -160,8 +161,21 @@ app.post("/api/lookup/stream", async (req, res) => {
   }
 });
 
-const server = app.listen(PORT, () => {
-  console.log(`API listening on http://localhost:${PORT}`);
+const clientDist = join(__dirname, "..", "client", "dist");
+if (existsSync(clientDist)) {
+  app.use(express.static(clientDist));
+  app.get(/^(?!\/api(?:\/|$)).*/, (_req, res) => {
+    res.sendFile(join(clientDist, "index.html"));
+  });
+}
+
+const server = app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Listening on http://0.0.0.0:${PORT}`);
+  console.log(
+    existsSync(clientDist)
+      ? `Serving UI from ${clientDist}`
+      : "client/dist not found — API only. Build the client before production start."
+  );
   console.log(
     process.env.GITHUB_TOKEN
       ? "GITHUB_TOKEN loaded"

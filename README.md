@@ -53,8 +53,26 @@ The Vite dev server proxies `/api` to Express.
 ## Production
 
 ```bash
-npm run build --prefix client
-npm start --prefix server
+npm run install:all
+npm run build
+npm start
 ```
 
-Serve the `client/dist` folder from Express or your host of choice and point the frontend at the same origin for `/api`.
+Express serves `client/dist` and the API on the same origin. It listens on `0.0.0.0` and `PORT` (default `3001`).
+
+## Railway
+
+The repo root `Dockerfile` builds the client and runs the API as one service. Railway uses that file automatically.
+
+1. Push the repo to GitHub.
+2. Create a Railway project from `altrix-ether/FindingContactsBot`.
+3. Add a `GITHUB_TOKEN` variable (a classic personal access token with no extra scopes is enough for public data). Without it, unauthenticated GitHub rate limits will block lookups quickly.
+4. Generate a public domain. Railway should call `/api/health` before sending traffic.
+
+From a machine that is logged in to the Railway CLI:
+
+```bash
+railway up
+railway domain
+railway variable set GITHUB_TOKEN
+```
