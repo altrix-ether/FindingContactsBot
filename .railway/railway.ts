@@ -3,6 +3,8 @@ import { defineRailway, github, preserve, project, service } from "railway/iac";
 export default defineRailway(() => {
   const web = service("web", {
     source: github("altrix-ether/FindingContactsBot", { branch: "main" }),
+    build: "npm run build",
+    start: "npm start",
     healthcheck: "/api/health",
     healthcheckTimeout: 30,
     env: {

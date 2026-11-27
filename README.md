@@ -62,12 +62,11 @@ Express serves `client/dist` and the API on the same origin. It listens on `0.0.
 
 ## Railway
 
-The repo root `Dockerfile` builds the client and runs the API as one service. Railway uses that file automatically.
+There is no Dockerfile. Railway's Node builder installs the npm workspaces, runs `npm run build`, and starts the app with `npm start`. One service serves the UI and the API.
 
-1. Push the repo to GitHub.
-2. Create a Railway project from `altrix-ether/FindingContactsBot`.
-3. Add a `GITHUB_TOKEN` variable (a classic personal access token with no extra scopes is enough for public data). Without it, unauthenticated GitHub rate limits will block lookups quickly.
-4. Generate a public domain. Railway should call `/api/health` before sending traffic.
+1. Push the repo to GitHub and redeploy. The service builder should be Railpack. If a previous deploy stored a Dockerfile path or start command, clear both in the service settings.
+2. Add a `GITHUB_TOKEN` variable (a classic personal access token with no extra scopes is enough for public data). Without it, unauthenticated GitHub rate limits will block lookups quickly.
+3. Generate a public domain. Set its target port to the port in the deploy log line `Listening on http://0.0.0.0:NNNN`. Leave the `PORT` variable unset so Railway can assign it.
 
 From a machine that is logged in to the Railway CLI:
 
